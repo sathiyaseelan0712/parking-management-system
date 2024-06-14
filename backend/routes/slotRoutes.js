@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Slot = require('../models/slotModel');
+const Vehicle = require('../models/vehicleModel');
 router.post('/initialize', async (req, res) => {
     const { slotCount } = req.body;
     if (!slotCount) {
@@ -29,7 +30,7 @@ router.delete('/deleteslots', async (req, res) => {
 router.get('/status', async (req, res) => {
     try {
         const totalSlots = await Slot.countDocuments();
-        const occupiedSlots = await Slot.countDocuments({ occupied: true });
+        const occupiedSlots = await Slot.countDocuments({isOccupied: true });
         const remainingSlots = totalSlots - occupiedSlots;
         res.status(200).json({ totalSlots, occupiedSlots, remainingSlots });
     } catch (error) {
@@ -39,15 +40,22 @@ router.get('/status', async (req, res) => {
 
 router.get('/find/:vehicleNumber', async (req, res) => {
     try {
-        const slot = await Slot.findOne({ vehicleNumber: req.params.vehicleNumber, occupied: true });
-        if (slot) {
-            res.status(200).json({ slotNumber: slot.number });
+        const vehicle = await Vehicle.findOne({ vehicleNumber: req.params.vehicleNumber });
+        if (vehicle) {
+            const slot = await Slot.findOne({ slotNumber: vehicle.slot, isOccupied: true });
+            if (slot) {
+                res.status(200).json({ slotNumber: slot.slotNumber });
+            } else {
+                res.status(404).json({ message: 'Slot not found or not occupied' });
+            }
         } else {
             res.status(404).json({ message: 'Vehicle not found' });
         }
     } catch (error) {
-        res.status(500).json({ message: 'Error finding vehicle slot' });
+        res.status(500).json({ message: 'Error finding vehicle slot', error });
     }
 });
+
+
 
 module.exports = router;

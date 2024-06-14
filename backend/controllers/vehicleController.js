@@ -45,22 +45,37 @@ const checkoutVehicle = async (req, res) => {
             return res.status(404).json({ message: 'Vehicle not found' });
         }
 
-        vehicle.checkoutTime = Date.now();
-        const duration = (vehicle.checkoutTime - vehicle.entryTime) / 1000 / 60 / 60; // duration in hours
+        if (vehicle.checkoutTime) {
+            return res.status(400).json({ message: 'Vehicle has already checked out' });
+        }
 
-        const rate = 10; // Define your rate per hour
+        vehicle.checkoutTime = Date.now();
+
+        const duration = (vehicle.checkoutTime - vehicle.entryTime) / (1000 * 60 * 60); 
+        const rate = 10; 
         vehicle.fee = Math.ceil(duration) * rate;
 
         await vehicle.save();
 
         const slot = await Slot.findOne({ slotNumber: vehicle.slot });
         slot.isOccupied = false;
+        slot.vehicleNumber = null; 
         await slot.save();
+        const entryTimeIST = new Date(vehicle.entryTime).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+        const checkoutTimeIST = new Date(vehicle.checkoutTime).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+        const response = {
+            vehicleNumber: vehicle.vehicleNumber,
+            fee: vehicle.fee,
+            slot: vehicle.slot,
+            entryTime: entryTimeIST,
+            checkoutTime: checkoutTimeIST
+        };
 
-        res.status(200).json({ vehicleNumber: vehicle.vehicleNumber, fee: vehicle.fee, slot: vehicle.slot });
+        res.status(200).json(response);
     } catch (error) {
         res.status(500).json({ message: 'Server Error', error });
     }
 };
+
 
 module.exports = { createVehicle, checkoutVehicle };

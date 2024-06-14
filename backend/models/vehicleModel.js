@@ -4,7 +4,12 @@ const vehicleSchema = new mongoose.Schema({
     vehicleNumber: {
         type: String,
         required: true,
-        unique: true,
+        validate: {
+            validator: function(v) {
+                return /^[A-Za-z]{2}\d{2}[A-Za-z]{2}\d{4}$/.test(v);
+            },
+            message: props => `${props.value} is not a valid vehicle number! Format should be: AA99AA9999`
+        }
     },
     entryTime: {
         type: Date,

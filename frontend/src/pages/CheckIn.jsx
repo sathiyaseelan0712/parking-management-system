@@ -11,7 +11,14 @@ const CheckIn = () => {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:5000/api/vehicles', { vehicleNumber });
-            setMessage(`Vehicle checked in successfully! Slot number: ${response.data.slot}`);
+            setMessage(
+                <div
+                  className="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                  role="alert"
+                >
+                  <span className="font-medium">Success!</span> Vehicle checked in successfully! Slot number: {response.data.slot}.
+                </div>
+              );
             setVehicleData(response.data);
         } catch (error) {
             setMessage('Error checking in vehicle');
@@ -31,20 +38,25 @@ const CheckIn = () => {
     };
 
     return (
-        <div>
-            <h2>Check In</h2>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    placeholder="Vehicle Number"
-                    value={vehicleNumber}
-                    onChange={(e) => setVehicleNumber(e.target.value)}
-                    required
-                />
-                <button type="submit">Check In</button>
-            </form>
-            {message && <p>{message}</p>}
-            {vehicleData && <button onClick={generateInvoice}>Generate Invoice</button>}
+        <div className="max-w-md mx-auto  shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <h2 className="block text-gray-700 text-xl font-bold mb-2">Check In</h2>
+        <form onSubmit={handleSubmit} className="mb-4">
+            <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                type="text"
+                placeholder="Vehicle Number"
+                value={vehicleNumber}
+                onChange={(e) => setVehicleNumber(e.target.value)}
+                required
+            />
+            <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4">
+                Check In
+            </button>
+        </form>
+        {message && <p className="text-red-500 text-xs italic">{message}</p>}
+        {vehicleData && <button onClick={generateInvoice} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2">
+            Generate Invoice
+        </button>}
         </div>
     );
 };
