@@ -56,3 +56,24 @@ This is a Vehicle Parking Management System built with a Node.js/Express backend
     npm start
     
 The frontend development server will start on http://localhost:3000.
+## API Endpoints
+### Vehicle Routes
+#### Check In: POST /api/vehicles/checkin
+- Request Body: { "vehicleNumber": "ABC1234" }
+- Response: { "slot": 1 }
+#### Check Out: PATCH /api/vehicles/checkout
+- Request Body: { "vehicleNumber": "ABC1234" }
+- Response: { "vehicleNumber": "ABC1234", "fee": 10, "slot": 1, "entryTime": "...", "checkoutTime": "..." }
+#### Find Vehicle Slot: GET /api/vehicles/find/:vehicleNumber
+- Response: { "slotNumber": 1 }
+### Slot Routes
+#### Initialize Slots: POST /api/slots/initialize
+- Request Body: { "slotCount": 10 }
+- Response: { "message": "Slots initialized" }
+#### Delete All Slots: DELETE /api/slots/deleteAll
+- Response: { "message": "All slots deleted" }
+## Usage
+- Check In a Vehicle: Enter the vehicle number and click "Check In".
+- Check Out a Vehicle: Enter the vehicle number and click "Check Out" to see the fee and other details.
+- View Slot Status: Click "Check Slot Status" to see the current status of all slots.
+- Find Vehicle Slot: Enter the vehicle number and click "Find Slot" to see the slot number of the parked vehicle.
