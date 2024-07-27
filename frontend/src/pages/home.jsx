@@ -9,7 +9,7 @@ const Home = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
-            <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">Vehicle Parking Management</h1>
+            <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">Parking Management System</h1>
             {view === 'home' && (
                 <div className="space-x-4 flex flex-wrap justify-center">
                     <button 

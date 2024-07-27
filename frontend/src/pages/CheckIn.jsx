@@ -2,7 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { jsPDF } from 'jspdf';
 
-const CheckIn = () => {
+function CheckIn  () {
     const [vehicleNumber, setVehicleNumber] = useState('');
     const [message, setMessage] = useState('');
     const [vehicleData, setVehicleData] = useState(null);

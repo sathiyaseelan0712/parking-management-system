@@ -6,6 +6,9 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    float_left: {
+      float: 'right',
+    },
   },
   plugins: [],
 };
